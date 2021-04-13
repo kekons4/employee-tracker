@@ -10,7 +10,7 @@ create table department (
     primary key(id)
 );
 
-insert into deparment (id, name)
+insert into department (id, name)
 values
 (1, "Information Technologies"),
 (2, "Human Resources"),
@@ -22,11 +22,12 @@ create table role (
     id int auto_increment not null,
     title varchar(30) not null,
     salary decimal not null,
-    department_id int foreign key not null,
-    primary key(id)
+    department_id int not null,
+    primary key(id),
+    foreign key(department_id) references department(id)
 );
 
-insert into role (id, title, salary, deparment_id)
+insert into role (id, title, salary, department_id)
 values
 (1, "Software Developer", 100000.00, 1),
 (2, "Recruiter", 65000.00, 2),
@@ -39,18 +40,19 @@ create table employee (
     id int auto_increment not null,
     first_name varchar(30) not null,
     last_name varchar(30) not null,
-    role_id int foreign key not null,
-    manager_id int foreign key,
-    primary key(id);
+    role_id int not null,
+    manager_id int,
+    primary key(id),
+	foreign key(role_id) references role(id)
 );
 
 insert into employee (id, first_name, last_name, role_id, manager_id)
 values
-("Jerry", "Thomas", 6, 1),
-("Barry", "Kelly", 1),
-("Delian", "Maxoff", 2, 2),
-("Lloyd", "Jefferson", 3),
-("Clide", "Hill", 4, 4),
-("Arthur", "Smith", 4),
-("Elliot", "Stop", 5, 5),
-("Alex", "Jackson", 5);
+(1, "Jerry", "Thomas", 6, 1),
+(2, "Barry", "Kelly", 1, null),
+(3, "Delian", "Maxoff", 2, 2),
+(4, "Lloyd", "Jefferson", 3, null),
+(5, "Clide", "Hill", 4, 4),
+(6, "Arthur", "Smith", 4, null),
+(7, "Elliot", "Stop", 5, 5),
+(8,"Alex", "Jackson", 5, null);

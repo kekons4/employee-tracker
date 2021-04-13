@@ -22,7 +22,31 @@ const connection = mysql.createConnection({
 const viewAllEmp = () => {
     const query = "SELECT * FROM employee";
     connection.query(query, (err, results) => {
-        console.log(results);
+        console.table(results);
+    });
+    main();
+}
+
+const viewEmpRole = () => {
+    inquirer.prompt([{
+        type: "list",
+        choices: [
+            "1 Software Developer", new inquirer.Separator(),
+            "2 Recruiter", new inquirer.Separator(),
+            "3 Business Analyst", new inquirer.Separator(),
+            "4 Operations Manager", new inquirer.Separator(),
+            "5 Executive Accountant", new inquirer.Separator(),
+            "6 Senior Software Developer", new inquirer.Separator()
+        ],
+        message: "Choose which role you want to see",
+        name: "choice"
+    }])
+    .then(response => {
+        const query = `SELECT * FROM employee where role_id = ${Number.parseInt(response.choice.charAt(0))}`;
+        connection.query(query, (err, results) => {
+            console.table(results);
+        })
+        main();
     })
 }
 
