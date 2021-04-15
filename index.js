@@ -72,7 +72,7 @@ const viewEmpDep = () => {
     }])
     .then(response => {
         // Query the Database and display rows
-        const query = `select * from employee as e left join role as r left join department as d on e.role_id = r.id and r.department_id = d.id where r.id = ${Number.parseInt(response.choice.charAt(0))}`;
+        const query = `select * from employee as e left join role as r on e.role_id = r.id where r.id = ${Number.parseInt(response.choice.charAt(0))}`;
         connection.query(query, (err, results) => {
             console.table(results);
         })
@@ -201,6 +201,7 @@ const updEmpRole= () => {
     });
 }
 
+// Updates Manager status
 const updEmpMan = () => {
     const queryOne = `select id, first_name, last_name from employee;`;
     connection.query(queryOne, (err, results) => {
@@ -217,17 +218,17 @@ const updEmpMan = () => {
             },
             {
                 type: "list",
-                choices: [1,2,3,4,5,6],
-                message: "Pick which role to update for Employee:",
+                choices: [1,2,3,4,5,6,"null"],
+                message: "Pick which Manager to update for Employee:",
                 name: "role"
             }
         ])
         .then(response => {
             const id = response.choice.split(" ");
-            const queryTwo = `update employee set role_id = ${response.role} where id = ${Number.parseInt(id)}`;
+            const queryTwo = `update employee set manager_id = ${response.role} where id = ${Number.parseInt(id)}`;
             connection.query(queryTwo, (err, results) => {
                 if (err) throw err;
-                console.log("Successfully Updated Employees Role");
+                console.log("\nSuccessfully Updated Employees Role");
             })
             main();
         });
@@ -246,7 +247,8 @@ const main = () => {
                 "Add Employee", new inquirer.Separator(),
                 "Remove Employee", new inquirer.Separator(),
                 "Update Employee Role", new inquirer.Separator(),
-                "Update Employee Manager", new inquirer.Separator()
+                "Update Employee Manager", new inquirer.Separator(),
+                "Exit", new inquirer.Separator()
             ],
             message: "What would you like to do?",
             name: "choice"
@@ -275,6 +277,7 @@ const main = () => {
                 updEmpMan();
             // Exit program
             } else if(response.choice === "Exit") {
+                connection.end();
                 process.exit(0);
             }
             // Handles invalid input
