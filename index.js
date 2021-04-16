@@ -1,9 +1,6 @@
 //Imports
 const mysql = require("mysql");
 const inquirer = require("inquirer");
-const employee = require("./class/employee");
-const role = require("./class/role");
-const department = require("./class/department");
 
 // Establish connection with database
 const connection = mysql.createConnection({
@@ -135,6 +132,65 @@ const addEmp = () => {
     })
 }
 
+// Add a department to db
+const addDep = () => {
+    inquirer.prompt([
+        {
+            type: "input",
+            message: "What is the name of the Department?",
+            name: "name"
+        }
+    ])
+    .then(response => {
+        const query = `insert into department (name) values("${response.name}")`;
+        connection.query(query, (err, results) => {
+            if(err) throw err;
+            console.log(results);
+            main();
+        })
+    })
+}
+
+// Add Roles
+const addRole = () => {
+    const query = `select * from department;`;
+    connection.query(query, (err, results) => {
+        const departments = [];
+        for(let i = 0; i < results.length; i++) {
+            departments.push(`${results[i].id} ${results[i].name}`);
+        }
+        inquirer.prompt([
+            {
+                type: "input",
+                message: "What is the name of the Role?",
+                name: "name"
+            },
+            {
+                type: "input",
+                message: "What is the salary?",
+                name: "salary"
+            },
+            {
+                type: "list",
+                choices: [...departments],
+                message: "Choice which department it belongs to:",
+                name: "department"
+            }
+        ])
+        .then(response => {
+            const id = response.department.split(" ")[0];
+            console.log(id);
+            const queryTwo = `insert into role (title, salary, department_id) values("${response.name}", ${Number.parseFloat(response.salary)}, ${Number.parseInt(id)})`;
+            connection.query(queryTwo, (err, results) => {
+                if(err) throw err;
+                console.log(results);
+                main();
+            })
+        })
+    })
+}
+
+// Remove an Employee
 const remEmp = async() => {
     const queryOne = `select id, first_name, last_name from employee;`;
     connection.query(queryOne, (err, results) => {
@@ -245,6 +301,8 @@ const main = () => {
                 "View Employees by Department", new inquirer.Separator(),
                 "View Employees by Role", new inquirer.Separator(),
                 "Add Employee", new inquirer.Separator(),
+                "Add Department", new inquirer.Separator(),
+                "Add Role", new inquirer.Separator(),
                 "Remove Employee", new inquirer.Separator(),
                 "Update Employee Role", new inquirer.Separator(),
                 "Update Employee Manager", new inquirer.Separator(),
@@ -266,8 +324,14 @@ const main = () => {
             // add employee
             } else if (response.choice === "Add Employee") {
                 addEmp();
+            // Add a Department
+            } else if (response.choice === "Add Department") {
+                addDep();
+            // Add a Role
+            } else if (response.choice === "Add Role") {
+                addRole();
             // remove an employee
-            } else if (response.choice === "Remove Employee") {
+            }else if (response.choice === "Remove Employee") {
                 remEmp();
             // Update an employees role
             } else if (response.choice === "Update Employee Role") {
