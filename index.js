@@ -77,6 +77,26 @@ const viewEmpDep = () => {
     })
 }
 
+// View all Departments
+const viewDep = () => {
+    const query = `select * from department;`;
+    connection.query(query, (err, results) => {
+        if(err) throw err;
+        console.table(results);
+    });
+    main();
+}
+
+// View all Roles
+const viewRole = () => {
+    const query = `select * from role;`;
+    connection.query(query, (err, results) => {
+        if(err) throw err;
+        console.table(results);
+    });
+    main();
+}
+
 // Add employee to database
 const addEmp = () => {
     inquirer.prompt([
@@ -153,12 +173,14 @@ const addDep = () => {
 
 // Add Roles
 const addRole = () => {
+    //Grab all departments and store them in departments array
     const query = `select * from department;`;
     connection.query(query, (err, results) => {
         const departments = [];
         for(let i = 0; i < results.length; i++) {
             departments.push(`${results[i].id} ${results[i].name}`);
         }
+        //Get user input for role
         inquirer.prompt([
             {
                 type: "input",
@@ -178,6 +200,7 @@ const addRole = () => {
             }
         ])
         .then(response => {
+            // persist it into role table
             const id = response.department.split(" ")[0];
             console.log(id);
             const queryTwo = `insert into role (title, salary, department_id) values("${response.name}", ${Number.parseFloat(response.salary)}, ${Number.parseInt(id)})`;
@@ -300,6 +323,8 @@ const main = () => {
                 "View All Employees", new inquirer.Separator(),
                 "View Employees by Department", new inquirer.Separator(),
                 "View Employees by Role", new inquirer.Separator(),
+                "View All Roles", new inquirer.Separator(),
+                "View All Departments", new inquirer.Separator(),
                 "Add Employee", new inquirer.Separator(),
                 "Add Department", new inquirer.Separator(),
                 "Add Role", new inquirer.Separator(),
@@ -321,6 +346,12 @@ const main = () => {
             // display employees by their role
             } else if (response.choice === "View Employees by Role") {
                 viewEmpRole();
+            // View All Roles
+            } else if(response.choice === "View All Roles") {
+                viewRole();
+            // View all Departments
+            } else if(response.choice === "View All Departments") {
+                viewDep();
             // add employee
             } else if (response.choice === "Add Employee") {
                 addEmp();
