@@ -5,6 +5,8 @@ HW 12 for OSU coding bootcamp
 In this project we created a node.js mysql cli interface. The user can get, add, remove, and update from three
 different tables. The Employee, role, and department tables are those which the user works with.
 
+Link to video Demonstration: https://drive.google.com/file/d/1xM3iTsHZuWLDXz9eyIV3jbpjRNrsbbxj/view
+
 ## Screenshots
 ![screenshot_one](/assets/screenshot_one.png)
 ##### In this screenshot the user is presented with the list of option to pick from.
