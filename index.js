@@ -22,9 +22,10 @@ const viewAllEmp = () => {
     // Query database and display rows
     const query = "SELECT * FROM employee";
     connection.query(query, (err, results) => {
+        if(err) throw err;
         console.table(results);
+        main();
     });
-    main();
 }
 
 // View Employees by Role
@@ -47,9 +48,10 @@ const viewEmpRole = () => {
         // Query Database and display rows
         const query = `SELECT * FROM employee where role_id = ${Number.parseInt(response.choice.charAt(0))}`;
         connection.query(query, (err, results) => {
+            if(err) throw err;
             console.table(results);
+            main();
         })
-        main();
     })
 }
 
@@ -71,9 +73,10 @@ const viewEmpDep = () => {
         // Query the Database and display rows
         const query = `select * from employee as e left join role as r on e.role_id = r.id where r.id = ${Number.parseInt(response.choice.charAt(0))}`;
         connection.query(query, (err, results) => {
+            if(err) throw err;
             console.table(results);
+            main();
         })
-        main();
     })
 }
 
@@ -83,8 +86,8 @@ const viewDep = () => {
     connection.query(query, (err, results) => {
         if(err) throw err;
         console.table(results);
+        main();
     });
-    main();
 }
 
 // View all Roles
@@ -93,8 +96,8 @@ const viewRole = () => {
     connection.query(query, (err, results) => {
         if(err) throw err;
         console.table(results);
+        main();
     });
-    main();
 }
 
 // Add employee to database
@@ -143,12 +146,12 @@ const addEmp = () => {
         const query = `insert into employee(first_name, last_name, role_id, manager_id)values("${response.fname}", "${response.lname}", ${Number.parseInt(parsedRole)}, ${Number.parseInt(parsedManager)})`;
         connection.query(query, (err, results) => {
             if (err) {
-                console.log(err);
+                throw err;
             } else {
                 console.log("\nSuccessfully added Employee");
             }
+            main();
         });
-        main();
     })
 }
 
@@ -240,8 +243,8 @@ const remEmp = async() => {
             connection.query(queryTwo, (err, results) => {
                 if (err) throw err;
                 console.log("\nSuccessfully Removed Employee");
+                main();
             })
-            main();
         })
     });
 }
@@ -274,8 +277,8 @@ const updEmpRole= () => {
             connection.query(queryTwo, (err, results) => {
                 if (err) throw err;
                 console.log("Successfully Updated Employees Role");
+                main();
             })
-            main();
         });
     });
 }
@@ -308,8 +311,8 @@ const updEmpMan = () => {
             connection.query(queryTwo, (err, results) => {
                 if (err) throw err;
                 console.log("\nSuccessfully Updated Employees Role");
+                main();
             })
-            main();
         });
     });
 }
